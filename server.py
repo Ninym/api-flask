@@ -1,9 +1,11 @@
 from flask import Flask
 from flask import request, redirect
 import flask
-from utils.NeteaseCloudMusic import NeteaseDownload
 import json
 import os
+
+from utils.NeteaseCloudMusic import NeteaseDownload
+from utils.ClearCache import Clear
 
 if not os.path.exists('./song/AppData'):
     os.system('mkdir ./song/AppData')
@@ -23,7 +25,7 @@ def Home():
 
 @app.route('/<query>', methods=['GET', "POST"])
 def parser(query):
-    paths = ['song']  # All requests paths
+    paths = ['song','clear']  # All requests paths
     path = query.split('/')
     parameter = path[0]
     if parameter not in paths:   # When the path not exists, this will return
@@ -33,7 +35,9 @@ def parser(query):
         file, song, author = NeteaseDownload(id)
         if file:
             return flask.send_from_directory('./song/AppData/', file, as_attachment=False, download_name='{} - {}.mp3'.format(author, song))
-
+    if parameter == 'clear':
+        msg = Clear()
+        return msg
 
 @app.errorhandler(404)
 def not_found(e):
