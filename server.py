@@ -40,11 +40,10 @@ def parser(query):
 
 
 @app.errorhandler(404)  # 404 Handler
-def not_found(e):
-    print('404: ' + request.base_url)
+def not_found():
     Error404 = {
         'code': 404,
-        'msg': 'Error with information: '.format(e)
+        'msg': 'Not found while accessing '.format(request.url)
     }
     return json.dumps(Error404)
 
@@ -55,7 +54,7 @@ def NeteaseHandler(id, ContentType):
     if ContentType == 'attachment':
         file, song, author = NeteaseDownload(id, ContentType)
         if file:
-            return flask.send_from_directory('./song/AppData/', file, as_attachment=False, download_name='{} - {}.mp3'.format(author, song))
+            return flask.send_from_directory('./cache/', file, as_attachment=False, download_name='{} - {}.mp3'.format(author, song))
         else:
             if song == 404 and author == 404:
                 return {'code': -1, 'msg': 'Cannot fetch resource.'}
