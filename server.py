@@ -8,7 +8,7 @@ import os
 from utils.NeteaseCloudMusic import NeteaseDownload
 from utils.ClearCache import Clear
 
-if not os.path.exists('./cache'):
+if not os.path.exists('./cache'):   # Cache dictionary for storaging files
     os.system('mkdir ./cache')
 
 app = Flask(__name__)
@@ -25,8 +25,8 @@ def parser(query):
     path = query.split('/')
     parameter = path[0]
     Error404 = {
-    'code': 404,
-    'msg': 'Invalid path {}'.format(parameter)
+        'code': 404,
+        'msg': 'Invalid path {}'.format(parameter)
     }
     if parameter not in paths:   # When the path not exists, this will return
         return json.dumps(Error404)
@@ -39,8 +39,12 @@ def parser(query):
         return msg
 
 
-@app.errorhandler(404)
+@app.errorhandler(404)  # 404 Handler
 def not_found(e):
+    Error404 = {
+        'code': 404,
+        'msg': 'Error with information: '.format(e)
+    }
     return json.dumps(Error404)
 
 
