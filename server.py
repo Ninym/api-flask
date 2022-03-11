@@ -1,5 +1,5 @@
 from importlib.resources import path
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask import request, redirect
 import flask
 import json
@@ -17,6 +17,11 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def Home():
     return redirect('https://ninym.top', code=301)
+
+
+@app.route('/favicon.ico')
+def favicon():  # Return favicon
+    return send_from_directory('./assets/', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
 @app.route('/<query>', methods=['GET', "POST"])
@@ -64,5 +69,5 @@ def NeteaseHandler(id, ContentType):
         Info = NeteaseDownload(id, ContentType)
         return Info
 
-
-app.run(host='0.0.0.0', port=8080, debug=True)
+if __name__ == '__main__':  # Main function
+    app.run(host='0.0.0.0', port=8080, debug=True)
