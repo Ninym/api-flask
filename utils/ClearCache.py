@@ -3,6 +3,7 @@ import shutil
 
 ToClear = ['./song/AppData']
 
+
 def Clear():
     try:
         for tree in ToClear:

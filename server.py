@@ -25,12 +25,12 @@ def Home():
 
 @app.route('/<query>', methods=['GET', "POST"])
 def parser(query):
-    paths = ['song','clear']  # All requests paths
+    paths = ['song', 'clear']  # All requests paths
     path = query.split('/')
     parameter = path[0]
     if parameter not in paths:   # When the path not exists, this will return
         return json.dumps(Error404)
-    if parameter == 'song': 
+    if parameter == 'song':
         id = request.args.get('id')
         ContentType = request.args.get('type')
         return NeteaseHandler(id, ContentType)
@@ -38,12 +38,15 @@ def parser(query):
         msg = Clear()
         return msg
 
+
 @app.errorhandler(404)
 def not_found(e):
     return json.dumps(Error404)
 
+
 def NeteaseHandler(id, ContentType):
-    if ContentType != 'attachment' and ContentType != 'json': ContentType = 'attachment'
+    if ContentType != 'attachment' and ContentType != 'json':
+        ContentType = 'attachment'
     if ContentType == 'attachment':
         file, song, author = NeteaseDownload(id, ContentType)
         if file:
