@@ -7,8 +7,8 @@ import os
 from utils.NeteaseCloudMusic import NeteaseDownload
 from utils.ClearCache import Clear
 
-if not os.path.exists('./song/AppData'):
-    os.system('mkdir ./song/AppData')
+if not os.path.exists('./cache'):
+    os.system('mkdir ./cache')
 
 Error404 = {
     'code': 404,

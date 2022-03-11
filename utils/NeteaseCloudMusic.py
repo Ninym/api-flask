@@ -10,7 +10,7 @@ def NeteaseDownload(id, ContentType):
         if song == None and author == None:     # If the song id doesn't map to a song, this will return.
             return False, 'Not Found', 'Not Found'
         base = 'https://music.163.com/song/media/outer/url?id='
-        file = './song/AppData/' + id + '.mp3'
+        file = './cache/' + id + '.mp3'
         filename = id+'.mp3'
         if os.path.exists(file):
             return filename, song, author
