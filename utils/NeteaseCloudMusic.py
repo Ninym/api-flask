@@ -38,7 +38,7 @@ def NeteaseDownload(id, ContentType):
         except TimeoutError:
             return {'code': -3, 'msg': 'Timed out. Please try again later.'}
         if stream.url == "https://music.163.com/404":
-            return {'code': 200, 'link': None, 'name': song, 'author': author, 'msg': 'Cannot fetch download link.'}
+            return {'code': 500, 'link': None, 'name': song, 'author': author, 'msg': 'Cannot fetch download link.'}
         return {'code': 200, 'link': stream.url, 'name': song, 'author': author, 'msg': 'Success'}
 
 
