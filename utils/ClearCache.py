@@ -1,7 +1,7 @@
 import os
 import shutil
 
-ToClear = ['./song/AppData']
+ToClear = ['./cache']
 
 
 def Clear():
