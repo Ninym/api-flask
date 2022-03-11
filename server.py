@@ -1,3 +1,4 @@
+from importlib.resources import path
 from flask import Flask
 from flask import request, redirect
 import flask
@@ -9,11 +10,6 @@ from utils.ClearCache import Clear
 
 if not os.path.exists('./cache'):
     os.system('mkdir ./cache')
-
-Error404 = {
-    'code': 404,
-    'msg': 'Invalid path'
-}
 
 app = Flask(__name__)
 
@@ -28,6 +24,10 @@ def parser(query):
     paths = ['song', 'clear']  # All requests paths
     path = query.split('/')
     parameter = path[0]
+    Error404 = {
+    'code': 404,
+    'msg': 'Invalid path {}'.format(parameter)
+    }
     if parameter not in paths:   # When the path not exists, this will return
         return json.dumps(Error404)
     if parameter == 'song':
