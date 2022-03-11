@@ -41,6 +41,7 @@ def parser(query):
 
 @app.errorhandler(404)  # 404 Handler
 def not_found(e):
+    print('404: ' + request.base_url)
     Error404 = {
         'code': 404,
         'msg': 'Error with information: '.format(e)
