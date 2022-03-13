@@ -4,6 +4,7 @@ from flask import request, redirect
 import flask
 import json
 import os
+import requests as r
 
 from utils.NeteaseCloudMusic import NeteaseDownload
 from utils.ClearCache import Clear
@@ -12,10 +13,11 @@ if not os.path.exists('./cache'):   # Cache dictionary for storaging files
     os.system('mkdir ./cache')
 
 app = Flask(__name__)
-
+BaiduAnalytics = 'https://hm.baidu.com/hm.js?03bd337fcd1aa8a1b2f78d23aa552ca5'
 
 @app.route('/', methods=['GET', 'POST'])
 def Home():
+    Analytics(request)
     return redirect('https://ninym.top', code=301)
 
 
@@ -26,6 +28,7 @@ def favicon():  # Return favicon
 
 @app.route('/<query>', methods=['GET', "POST"])
 def parser(query):
+    Analytics(request)
     paths = ['song', 'clear']  # All requests paths
     path = query.split('/')
     parameter = path[0]
@@ -68,6 +71,11 @@ def NeteaseHandler(id, ContentType):
     else:
         Info = NeteaseDownload(id, ContentType)
         return Info
+
+def Analytics(request):
+    print(request.headers)
+    header = request.headers
+    r.get(BaiduAnalytics, headers = header)
 
 if __name__ == '__main__':  # Main function
     app.run(host='0.0.0.0', port=8080, debug=True)
