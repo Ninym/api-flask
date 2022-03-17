@@ -8,12 +8,14 @@ import requests as r
 
 from utils.NeteaseCloudMusic import NeteaseDownload
 from utils.ClearCache import Clear
+from utils.UrlJump import UrlParser
 
 if not os.path.exists('./cache'):   # Cache dictionary for storaging files
     os.system('mkdir ./cache')
 
 app = Flask(__name__)
 BaiduAnalytics = 'https://hm.baidu.com/hm.js?03bd337fcd1aa8a1b2f78d23aa552ca5'
+
 
 @app.route('/', methods=['GET', 'POST'])
 def Home():
@@ -29,7 +31,7 @@ def favicon():  # Return favicon
 @app.route('/<query>', methods=['GET', "POST"])
 def parser(query):
     Analytics(request)
-    paths = ['song', 'clear']  # All requests paths
+    paths = ['song', 'clear', 'url']  # All requests paths
     path = query.split('/')
     parameter = path[0]
     Error404 = {
@@ -42,6 +44,11 @@ def parser(query):
         id = request.args.get('id')
         ContentType = request.args.get('type')
         return NeteaseHandler(id, ContentType)
+    # if parameter == 'url':
+    #     operation = request.arg.get('opeation')
+    #     key = request.arg.get('key')
+    #     times = request.arg.get('times')
+    #     return UrlParser(operation, key, times)
     if parameter == 'clear':
         msg = Clear()
         return msg
@@ -72,10 +79,12 @@ def NeteaseHandler(id, ContentType):
         Info = NeteaseDownload(id, ContentType)
         return Info
 
+
 def Analytics(request):
     print(request.headers)
     header = request.headers
-    r.get(BaiduAnalytics, headers = header)
+    r.get(BaiduAnalytics, headers=header)
+
 
 if __name__ == '__main__':  # Main function
     app.run(host='0.0.0.0', port=8080, debug=True)
