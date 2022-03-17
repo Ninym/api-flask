@@ -30,10 +30,10 @@ def favicon():  # Return favicon
     return send_from_directory('./assets/', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
-@app.route('/<query>', methods=['GET', "POST"])
+@app.route('/<query>', methods=['GET', "POST"]) # First path handler
 def parser(query):
     Analytics(request)
-    paths = ['song', 'clear', 'url', 'gh', 'cache']  # All requests paths
+    paths = ['song', 'clear', 'url']  # All requests paths
     path = query.split('/')
     parameter = path[0]
     Error404 = {
@@ -46,8 +46,6 @@ def parser(query):
         id = request.args.get('id')
         ContentType = request.args.get('type')
         return NeteaseHandler(id, ContentType)
-    if parameter == 'cache':
-        return open('./cache/{}'.foramt(parameter[1]),'rb')
     # if parameter == 'url':
     #     operation = request.arg.get('opeation')
     #     key = request.arg.get('key')
@@ -57,7 +55,12 @@ def parser(query):
         msg = Clear()
         return msg
 
-@app.route('/gh/<operation>', methods=['GET','POST'])
+@app.route('/cache/<file>', methods=['GET'])    # Cache Handler
+def cacheHandler(file):
+    return flask.send_from_directory('./cache/', file, as_attachment=False, download_name=file)
+
+
+@app.route('/gh/<operation>', methods=['GET','POST'])   # Github Handler
 def ghHandler(operation):
     author = request.args.get('author')
     repo = request.args.get('repo')
