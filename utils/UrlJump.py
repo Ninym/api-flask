@@ -9,4 +9,5 @@ database = pymongo.MongoClient(MongoURI)   # Create Connection to MongoDB
 # Initalization End
 
 def UrlParser(operation):
-    if operation == add
+    if operation == add:
+        pass

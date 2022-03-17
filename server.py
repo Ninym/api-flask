@@ -1,4 +1,5 @@
 from importlib.resources import path
+import re
 from flask import Flask, send_from_directory
 from flask import request, redirect
 import flask
@@ -8,7 +9,8 @@ import requests as r
 
 from utils.NeteaseCloudMusic import NeteaseDownload
 from utils.ClearCache import Clear
-from utils.UrlJump import UrlParser
+# from utils.UrlJump import UrlParser
+from utils.Github import ghParser
 
 if not os.path.exists('./cache'):   # Cache dictionary for storaging files
     os.system('mkdir ./cache')
@@ -31,7 +33,7 @@ def favicon():  # Return favicon
 @app.route('/<query>', methods=['GET', "POST"])
 def parser(query):
     Analytics(request)
-    paths = ['song', 'clear', 'url']  # All requests paths
+    paths = ['song', 'clear', 'url', 'gh', 'cache']  # All requests paths
     path = query.split('/')
     parameter = path[0]
     Error404 = {
@@ -44,6 +46,8 @@ def parser(query):
         id = request.args.get('id')
         ContentType = request.args.get('type')
         return NeteaseHandler(id, ContentType)
+    if parameter == 'cache':
+        return open('./cache/{}'.foramt(parameter[1]),'rb')
     # if parameter == 'url':
     #     operation = request.arg.get('opeation')
     #     key = request.arg.get('key')
@@ -53,6 +57,15 @@ def parser(query):
         msg = Clear()
         return msg
 
+@app.route('/gh/<operation>', methods=['GET','POST'])
+def ghHandler(operation):
+    author = request.args.get('author')
+    repo = request.args.get('repo')
+    ContentType = request.args.get('type')
+    if ContentType != 'pic' and ContentType != 'json':
+        ContentType = 'pic'
+    print(operation,author,repo,ContentType)
+    return ghParser(operation, author, repo, ContentType)
 
 @app.errorhandler(404)  # 404 Handler
 def not_found():
@@ -62,6 +75,13 @@ def not_found():
     }
     return json.dumps(Error404)
 
+@app.errorhandler(500)  # 404 Handler
+def not_found():
+    Error500 = {
+        'code': 500,
+        'msg': 'Internal Server Error'
+    }
+    return json.dumps(Error500)
 
 def NeteaseHandler(id, ContentType):
     if ContentType != 'attachment' and ContentType != 'json':
