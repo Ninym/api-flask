@@ -70,11 +70,15 @@ def ghHandler(operation):
     print(operation,author,repo,ContentType)
     return ghParser(operation, author, repo, ContentType)
 
+@app.route('/PrivateDownloader/<operation>')
+def pdHandler(operation):
+    pass
+
 @app.errorhandler(404)  # 404 Handler
 def not_found():
     Error404 = {
         'code': 404,
-        'msg': 'Not found while accessing '.format(request.url)
+        'msg': 'Not found while accessing {}'.format(request.url)
     }
     return json.dumps(Error404)
 

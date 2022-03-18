@@ -2,3 +2,5 @@ requests
 flask
 bs4
 lxml
+matplotlib
+numpy
