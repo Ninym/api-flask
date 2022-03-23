@@ -1,6 +1,7 @@
 import re
 from flask import Flask, send_from_directory
-from flask import request, redirect, abort
+from flask import request, redirect, abort, Response
+from flask_analytics import Analytics
 import flask
 import json
 import os
@@ -15,8 +16,10 @@ if not os.path.exists('./cache'):   # Cache dictionary for storaging files
     os.system('mkdir ./cache')
 
 app = Flask(__name__)
+Analytics(app)
 BaiduAnalytics = 'https://hm.baidu.com/hm.js?03bd337fcd1aa8a1b2f78d23aa552ca5'
-
+app.config['ANALYTICS']['GOOGLE_CLASSIC_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'
+app.config['ANALYTICS']['GOOGLE_UNIVERSAL_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'
 
 @app.route('/', methods=['GET'])
 def Home():
@@ -66,28 +69,19 @@ def ghHandler(operation):
     ContentType = request.args.get('type')
     if ContentType != 'pic' and ContentType != 'json':
         ContentType = 'pic'
-    print(operation,author,repo,ContentType)
     return ghParser(operation, author, repo, ContentType)
 
 @app.route('/PrivateDownloader/<operation>')
 def pdHandler(operation):
     pass
 
-@app.errorhandler(404)  # 404 Handler
-def not_found():
-    Error404 = {
-        'code': 404,
-        'msg': 'Not found while accessing {}'.format(request.url)
-    }
-    return json.dumps(Error404)
-
-@app.errorhandler(500)  # 404 Handler
-def not_found():
-    Error500 = {
-        'code': 500,
-        'msg': 'Internal Server Error'
-    }
-    return json.dumps(Error500)
+# @app.errorhandler(404)  # 404 Handler
+# def not_found():
+#     Error404 = {
+#         'code': 404,
+#         'msg': 'Not found while accessing {}'.format(request.url)
+#     }
+#     return json.dumps(Error404)
 
 def NeteaseHandler(id, ContentType):
     if ContentType != 'attachment' and ContentType != 'json':
@@ -112,5 +106,5 @@ def Analytics(request):
     r.get(BaiduAnalytics, headers=header)
 
 
-if __name__ == '__main__':  # Main function
-    app.run(host='0.0.0.0', port=8080, debug=False)
+if __name__ == '__main__':  # Launcher
+    app.run(host='0.0.0.0', port=8080, debug=True)
