@@ -1,7 +1,6 @@
-from importlib.resources import path
 import re
 from flask import Flask, send_from_directory
-from flask import request, redirect
+from flask import request, redirect, abort
 import flask
 import json
 import os
@@ -41,7 +40,7 @@ def parser(query):
         'msg': 'Invalid path {}'.format(parameter)
     }
     if parameter not in paths:   # When the path not exists, this will return
-        return json.dumps(Error404)
+        abort(404)
     if parameter == 'song':
         id = request.args.get('id')
         ContentType = request.args.get('type')
