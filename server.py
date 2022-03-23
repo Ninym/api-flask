@@ -19,7 +19,7 @@ app = Flask(__name__)
 BaiduAnalytics = 'https://hm.baidu.com/hm.js?03bd337fcd1aa8a1b2f78d23aa552ca5'
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def Home():
     Analytics(request)
     return redirect('https://ninym.top', code=301)
@@ -30,7 +30,7 @@ def favicon():  # Return favicon
     return send_from_directory('./assets/', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
-@app.route('/<query>', methods=['GET', "POST"]) # First path handler
+@app.route('/<query>', methods=['GET']) # First path handler
 def parser(query):
     Analytics(request)
     paths = ['song', 'clear', 'url']  # All requests paths
@@ -60,7 +60,7 @@ def cacheHandler(file):
     return flask.send_from_directory('./cache/', file, as_attachment=False, download_name=file)
 
 
-@app.route('/gh/<operation>', methods=['GET','POST'])   # Github Handler
+@app.route('/gh/<operation>', methods=['GET'])   # Github Handler
 def ghHandler(operation):
     author = request.args.get('author')
     repo = request.args.get('repo')
