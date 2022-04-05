@@ -64,6 +64,7 @@ def cacheHandler(file):
 
 @app.route('/gh/<operation>', methods=['GET'])   # Github Handler
 def ghHandler(operation):
+    Analytics(request)
     author = request.args.get('author')
     repo = request.args.get('repo')
     ContentType = request.args.get('type')
