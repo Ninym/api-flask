@@ -18,13 +18,13 @@ if not os.path.exists('./cache'):   # Cache dictionary for storaging files
 app = Flask(__name__)
 Analytics(app)
 BaiduAnalytics = 'https://hm.baidu.com/hm.js?03bd337fcd1aa8a1b2f78d23aa552ca5'
-app.config['ANALYTICS']['GOOGLE_CLASSIC_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'
-app.config['ANALYTICS']['GOOGLE_UNIVERSAL_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'
+app.config['ANALYTICS']['GOOGLE_CLASSIC_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'     # Google Analytics by Flask_Analytics
+app.config['ANALYTICS']['GOOGLE_UNIVERSAL_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'   # Google Universal Analytics by Flask_Analytics
 
 @app.route('/', methods=['GET'])
-def Home():
+def Home():     # No valid path, return to the doc
     Analytics(request)
-    return redirect('https://ninym.top', code=301)
+    return redirect('https://ninym.top', code=301)  
 
 
 @app.route('/favicon.ico')
@@ -42,7 +42,7 @@ def parser(query):
         'code': 404,
         'msg': 'Invalid path {}'.format(parameter)
     }
-    if parameter not in paths:   # When the path not exists, this will return
+    if parameter not in paths:   # When the path not exists, this will return 404
         abort(404)
     if parameter == 'song':
         id = request.args.get('id')
@@ -101,10 +101,12 @@ def NeteaseHandler(id, ContentType):
 
 
 def Analytics(request):
+    print('{:=^80}'.format('New request started'))
     print(request.headers)
+    print('{:=^80}'.format('New request ended'))
     header = request.headers
     r.get(BaiduAnalytics, headers=header)
 
 
 if __name__ == '__main__':  # Launcher
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)  # If debug is set to True, every time when the file is saved the program will reload
