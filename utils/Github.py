@@ -83,7 +83,6 @@ class Release():
         g = np.linspace(103,140,len(self.ReleaseDownloads),dtype=np.uint8)
         b = np.linspace(232,216,len(self.ReleaseDownloads),dtype=np.uint8)
         colors = ['#'+'{:0>2}{:0>2}{:0>2}'.format(str(hex(r[i])),str(hex(g[i])),str(hex(b[i]))).replace('0x','') for i in range(len(r))]
-        print(colors)
         plt.pie(self.ReleaseDownloads,explode=explode,labels=self.ReleaseLabel,autopct='%1.1f%%',colors=colors)
         plt.title('Downloads of {}/{}'.format(self.author,self.repo))
         plt.savefig('./cache/{}-{}.png'.format(self.author,self.repo))
