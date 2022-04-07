@@ -70,11 +70,6 @@ def ghHandler(operation):
         ContentType = 'pic'
     return ghParser(operation, author, repo, ContentType)
 
-@app.route('/PrivateDownloader/<operation>')
-def pdHandler(operation):
-    Analytics(request)
-    pass
-
 @app.errorhandler(404)  # 404 Handler
 def not_found():
     Analytics(request)
