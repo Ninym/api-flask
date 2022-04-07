@@ -29,6 +29,7 @@ def Home():     # No valid path, return to the doc
 
 @app.route('/favicon.ico')
 def favicon():  # Return favicon
+    Analytics(request)
     return send_from_directory('./assets/', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
@@ -38,10 +39,6 @@ def parser(query):
     paths = ['song', 'clear', 'url']  # All requests paths
     path = query.split('/')
     parameter = path[0]
-    Error404 = {
-        'code': 404,
-        'msg': 'Invalid path {}'.format(parameter)
-    }
     if parameter not in paths:   # When the path not exists, this will return 404
         abort(404)
     if parameter == 'song':
@@ -59,6 +56,7 @@ def parser(query):
 
 @app.route('/cache/<file>', methods=['GET'])    # Cache Handler
 def cacheHandler(file):
+    Analytics(request)
     return flask.send_from_directory('./cache/', file, as_attachment=False, download_name=file)
 
 
@@ -74,15 +72,12 @@ def ghHandler(operation):
 
 @app.route('/PrivateDownloader/<operation>')
 def pdHandler(operation):
+    Analytics(request)
     pass
 
-# @app.errorhandler(404)  # 404 Handler
-# def not_found():
-#     Error404 = {
-#         'code': 404,
-#         'msg': 'Not found while accessing {}'.format(request.url)
-#     }
-#     return json.dumps(Error404)
+@app.errorhandler(404)  # 404 Handler
+def not_found():
+    Analytics(request)
 
 def NeteaseHandler(id, ContentType):
     if ContentType != 'attachment' and ContentType != 'json':
