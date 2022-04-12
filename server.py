@@ -20,6 +20,7 @@ Analytics(app)
 BaiduAnalytics = 'https://hm.baidu.com/hm.js?03bd337fcd1aa8a1b2f78d23aa552ca5'
 app.config['ANALYTICS']['GOOGLE_CLASSIC_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'     # Google Analytics by Flask_Analytics
 app.config['ANALYTICS']['GOOGLE_UNIVERSAL_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'   # Google Universal Analytics by Flask_Analytics
+Redis_URI = os.environ.get('REDIS_URI')
 
 @app.route('/', methods=['GET'])
 def Home():     # No valid path, return to the doc
@@ -70,6 +71,10 @@ def ghHandler(operation):
         ContentType = 'pic'
     return ghParser(operation, author, repo, ContentType)
 
+@app.route('/url/<token>',methods=['GET','POST'])
+def UrlHandler(tokan):
+    pass
+
 @app.errorhandler(404)  # 404 Handler
 def not_found():
     Analytics(request)
@@ -100,4 +105,4 @@ def Analytics(request):
 
 
 if __name__ == '__main__':  # Launcher
-    app.run(host='0.0.0.0', port=8080, debug=True)  # If debug is set to True, every time when the file is saved the program will reload
+    app.run(host='0.0.0.0', port=8080, debug=False)  # If debug is set to True, every time when the file is saved the program will reload
