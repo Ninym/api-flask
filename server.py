@@ -75,9 +75,9 @@ def ghHandler(operation):
 def UrlHandler(tokan):
     pass
 
-@app.errorhandler(404)  # 404 Handler
-def not_found():
-    Analytics(request)
+# @app.errorhandler(404)  # 404 Handler
+# def not_found():
+#     Analytics(request)
 
 def NeteaseHandler(id, ContentType):
     if ContentType != 'attachment' and ContentType != 'json':
