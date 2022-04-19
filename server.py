@@ -11,6 +11,7 @@ from utils.NeteaseCloudMusic import NeteaseDownload
 from utils.ClearCache import Clear
 # from utils.UrlJump import UrlParser
 from utils.Github import ghParser
+from utils.Pixiv import PixivImgDownload
 
 if not os.path.exists('./cache'):   # Cache dictionary for storaging files
     os.system('mkdir ./cache')
@@ -32,6 +33,12 @@ def Home():     # No valid path, return to the doc
 def favicon():  # Return favicon
     Analytics(request)
     return send_from_directory('./assets/', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
+@app.route('/pixiv/<id>', methods=['GET'])
+def PixivParser(id):
+    Analytics(request)
+    PixivImgDownload(id)
+    return flask.send_from_directory('./cache/', f'{id}_{0}.png', as_attachment=False, download_name=f'{id}.png')
 
 
 @app.route('/<query>', methods=['GET']) # First path handler

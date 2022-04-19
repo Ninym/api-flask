@@ -6,7 +6,7 @@ import json
 import flask
 
 ReleaseBase = 'https://api.github.com/repos/'
-domain = 'dev.api.ninym.top'
+domain = 'api.ninym.top'
 
 def ghParser(operation, author, repo, ContentType):
     operations = ['release']
