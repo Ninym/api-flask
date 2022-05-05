@@ -117,7 +117,7 @@ def LongPathParser(mapid):
     novideo = True if request.args.get('novideo') == '1' else False
     return MapDownloader(mapid, OsuCommunityCookie, novideo)
 
-@app.route('/map/<mapid>', methods=['GET'])
+@app.route('/osumap/<mapid>', methods=['GET'])
 def OsuHandler(mapid):
     novideo = True if request.args.get('novideo') == '1' else False
     return MapDownloader(mapid, OsuCommunityCookie, novideo)
