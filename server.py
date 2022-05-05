@@ -62,6 +62,10 @@ def parser(query):
         msg = Clear()
         return msg
 
+@app.route('/<query>/', methods=['GET'])
+def SplashAddedHandler(query):
+    return parser(query)
+
 @app.route('/cache/<file>', methods=['GET'])    # Cache Handler
 def cacheHandler(file):
     Analytics(request)
@@ -77,6 +81,10 @@ def ghHandler(operation):
     if ContentType != 'pic' and ContentType != 'json':
         ContentType = 'pic'
     return ghParser(operation, author, repo, ContentType)
+
+@app.route('/gh/<op>/', methods=['GET'])
+def SplashAddedghHandler(op):
+    return ghHandler(op)
 
 @app.route('/url/<token>',methods=['GET','POST'])
 def UrlHandler(tokan):
