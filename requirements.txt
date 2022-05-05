@@ -5,3 +5,4 @@ lxml
 matplotlib
 numpy
 Flask-Analytics
+tqdm
