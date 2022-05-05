@@ -12,6 +12,7 @@ from utils.ClearCache import Clear
 # from utils.UrlJump import UrlParser
 from utils.Github import ghParser
 from utils.Pixiv import PixivImgDownload
+from utils.Osu import MapDownloader
 
 if not os.path.exists('./cache'):   # Cache dictionary for storaging files
     os.system('mkdir ./cache')
@@ -22,6 +23,7 @@ BaiduAnalytics = 'https://hm.baidu.com/hm.js?03bd337fcd1aa8a1b2f78d23aa552ca5'
 app.config['ANALYTICS']['GOOGLE_CLASSIC_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'     # Google Analytics by Flask_Analytics
 app.config['ANALYTICS']['GOOGLE_UNIVERSAL_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'   # Google Universal Analytics by Flask_Analytics
 Redis_URI = os.environ.get('REDIS_URI')
+OsuCommunityCookie = os.environ.get('OSU_COMMUNITY_COOKIE')
 
 @app.route('/', methods=['GET'])
 def Home():     # No valid path, return to the doc
@@ -110,6 +112,15 @@ def NeteaseHandler(id, ContentType):
         Info = NeteaseDownload(id, ContentType)
         return Info
 
+@app.route('/beatmapsets/<mapid>', methods=['GET'])
+def LongPathParser(mapid):
+    novideo = True if request.args.get('novideo') == '1' else False
+    return MapDownloader(mapid, OsuCommunityCookie, novideo)
+
+@app.route('/map/<mapid>', methods=['GET'])
+def OsuHandler(mapid):
+    novideo = True if request.args.get('novideo') == '1' else False
+    return MapDownloader(mapid, OsuCommunityCookie, novideo)
 
 def Analytics(request):
     print('{:=^80}'.format('New request started'))
