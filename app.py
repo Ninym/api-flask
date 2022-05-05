@@ -112,12 +112,12 @@ def NeteaseHandler(id, ContentType):
         Info = NeteaseDownload(id, ContentType)
         return Info
 
-@app.route('/beatmapsets/<mapid>', methods=['GET'])
+@app.route('/beatmapsets/<int:mapid>', methods=['GET'])
 def LongPathParser(mapid):
     novideo = True if request.args.get('novideo') == '1' else False
     return MapDownloader(mapid, OsuCommunityCookie, novideo)
 
-@app.route('/osumap/<mapid>', methods=['GET'])
+@app.route('/osumap/<int:mapid>', methods=['GET'])
 def OsuHandler(mapid):
     novideo = True if request.args.get('novideo') == '1' else False
     return MapDownloader(mapid, OsuCommunityCookie, novideo)
