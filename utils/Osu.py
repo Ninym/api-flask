@@ -42,11 +42,11 @@ def MapDownloader(mapid, cookie, novideo):
         'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
         'Cookie': cookie
         }
-    download(Downloadurl, f'./.cache/{mapid}.osz', headers)
+    download(Downloadurl, f'/.cache/{mapid}.osz', headers)
     # content = response.content
     # with open(f'./.cache/{mapid}.osz', 'wb') as f:
     #     f.write(content)
-    return send_from_directory('./.cache', f'{mapid}.osz', as_attachment=True, download_name=f'{title} - {artist}.osz')
+    return send_from_directory('/.cache', f'{mapid}.osz', as_attachment=True, download_name=f'{title} - {artist}.osz')
 
 def download(url: str, fname: str, headers: dict):
     # 用流stream的方式获取url的数据
