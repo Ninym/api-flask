@@ -144,4 +144,6 @@ def Analytics(request):
 
 
 if __name__ == '__main__':  # Launcher
+    logger.info('New Instance Started.')
     app.run(host='0.0.0.0', port=8080, debug=False)  # If debug is set to True, every time when the file is saved the program will reload
+
