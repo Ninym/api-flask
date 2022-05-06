@@ -14,6 +14,19 @@ from utils.Github import ghParser
 from utils.Pixiv import PixivImgDownload
 from utils.Osu import MapDownloader
 
+# Logtail Register
+from logtail import LogtailHandler
+handler = LogtailHandler(source_token="mquAcDGSyhpjY47S9YxLeEce")
+# Logtail Register Ends
+
+# Log Collector
+import logging
+logger = logging.getLogger(__name__)
+logger.handlers = []
+logger.setLevel(logging.INFO)
+logger.addHandler(handler)
+# Log Collector Ends
+
 if not os.path.exists('./cache'):   # Cache dictionary for storaging files
     os.system('mkdir ./cache')
 
@@ -123,9 +136,9 @@ def OsuHandler(mapid):
     return MapDownloader(mapid, OsuCommunityCookie, novideo)
 
 def Analytics(request):
-    print('{:=^80}'.format('New request started'))
-    print(request.headers)
-    print('{:=^80}'.format('New request ended'))
+    logger.info('{:=^80}'.format('New request started'))
+    logger.info(request.headers)
+    logger.info('{:=^80}'.format('New request ended'))
     header = request.headers
     r.get(BaiduAnalytics, headers=header)
 

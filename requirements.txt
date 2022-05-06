@@ -6,3 +6,4 @@ matplotlib
 numpy
 Flask-Analytics
 tqdm
+logtail-python

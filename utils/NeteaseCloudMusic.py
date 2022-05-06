@@ -3,6 +3,18 @@ import bs4
 import os
 import re
 
+# Logtail Register
+from logtail import LogtailHandler
+handler = LogtailHandler(source_token="mquAcDGSyhpjY47S9YxLeEce")
+# Logtail Register Ends
+
+# Log Collector
+import logging
+logger = logging.getLogger(__name__)
+logger.handlers = []
+logger.setLevel(logging.INFO)
+logger.addHandler(handler)
+# Log Collector Ends
 
 def NeteaseDownload(id, ContentType):
     if ContentType == 'attachment':
@@ -20,10 +32,10 @@ def NeteaseDownload(id, ContentType):
         except TimeoutError:
             return False, None, None
         if 'u-errlg u-errlg-404' in stream.text:    # Some VIP songs cannot be downloaded
-            print(
+            logger.error(
                 '[NETEASEMUSICDOWNLOAD] Failed while getting the resources and information of a song.')
             return False, 404, 404
-        print('[NETEASEMUSICDOWNLOAD] Getting song {} - {}, returned status_code {}'.format(
+        logger.info('[NETEASEMUSICDOWNLOAD] Getting song {} - {}, returned status_code {}'.format(
             author, song, stream.status_code))
         with open(file, 'wb') as f:
             f.write(stream.content)
