@@ -1,3 +1,4 @@
+import logging
 from lib2to3.pgen2 import token
 import re
 from flask import Flask, send_from_directory
@@ -21,7 +22,6 @@ handler = LogtailHandler(source_token="mquAcDGSyhpjY47S9YxLeEce")
 # Logtail Register Ends
 
 # Log Collector
-import logging
 logger = logging.getLogger(__name__)
 logger.handlers = []
 logger.setLevel(logging.INFO)
@@ -34,21 +34,25 @@ if not os.path.exists('./cache'):   # Cache dictionary for storaging files
 app = Flask(__name__)
 Analytics(app)
 BaiduAnalytics = 'https://hm.baidu.com/hm.js?03bd337fcd1aa8a1b2f78d23aa552ca5'
-app.config['ANALYTICS']['GOOGLE_CLASSIC_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'     # Google Analytics by Flask_Analytics
-app.config['ANALYTICS']['GOOGLE_UNIVERSAL_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'   # Google Universal Analytics by Flask_Analytics
+# Google Analytics by Flask_Analytics
+app.config['ANALYTICS']['GOOGLE_CLASSIC_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'
+# Google Universal Analytics by Flask_Analytics
+app.config['ANALYTICS']['GOOGLE_UNIVERSAL_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'
 Redis_URI = os.environ.get('REDIS_URI')
 OsuCommunityCookie = os.environ.get('OSU_COMMUNITY_COOKIE')
+
 
 @app.route('/', methods=['GET'])
 def Home():     # No valid path, return to the doc
     Analytics(request)
-    return redirect('https://ninym.top', code=301)  
+    return redirect('https://ninym.top', code=301)
 
 
 @app.route('/favicon.ico')
 def favicon():  # Return favicon
     Analytics(request)
     return send_from_directory('./assets/', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
 
 @app.route('/pixiv/<id>', methods=['GET'])
 def PixivParser(id):
@@ -57,7 +61,7 @@ def PixivParser(id):
     return flask.send_from_directory('./cache/', f'{id}_{0}.png', as_attachment=False, download_name=f'{id}.png')
 
 
-@app.route('/<query>', methods=['GET']) # First path handler
+@app.route('/<query>', methods=['GET'])  # First path handler
 def parser(query):
     Analytics(request)
     paths = ['song', 'clear', 'url']  # All requests paths
@@ -78,37 +82,11 @@ def parser(query):
         msg = Clear()
         return msg
 
-@app.route('/pusher', methods=['GET'])
-def WechatPusher():
-    title = request.args.get('title')
-    descr = request.args.get('descr')
-    content = request.args.get('content')
-    params = {
-        'title': title,
-        "description": descr,
-        "content": content,
-        'token': os.environ.get('PUSHER_TOKEN')
-    }
-    res = r.post('https://pusher.api.ninym.top/', params=params)
-    return res.text
-
-@app.route('/pusher/', methods=['GET'])
-def PusherSplashAddedHander():
-    title = request.args.get('title')
-    descr = request.args.get('descr')
-    content = request.args.get('content')
-    params = {
-        'title': title,
-        "description": descr,
-        "content": content,
-        'token': os.environ.get('PUSHER_TOKEN')
-    }
-    res = r.post('https://pusher.api.ninym.top/', params=params)
-    return res.text
 
 @app.route('/<query>/', methods=['GET'])
 def SplashAddedHandler(query):
     return parser(query)
+
 
 @app.route('/cache/<file>', methods=['GET'])    # Cache Handler
 def cacheHandler(file):
@@ -126,17 +104,20 @@ def ghHandler(operation):
         ContentType = 'pic'
     return ghParser(operation, author, repo, ContentType)
 
+
 @app.route('/gh/<op>/', methods=['GET'])
 def SplashAddedghHandler(op):
     return ghHandler(op)
 
-@app.route('/url/<token>',methods=['GET','POST'])
+
+@app.route('/url/<token>', methods=['GET', 'POST'])
 def UrlHandler(tokan):
     pass
 
 # @app.errorhandler(404)  # 404 Handler
 # def not_found():
 #     Analytics(request)
+
 
 def NeteaseHandler(id, ContentType):
     if ContentType != 'attachment' and ContentType != 'json':
@@ -154,15 +135,18 @@ def NeteaseHandler(id, ContentType):
         Info = NeteaseDownload(id, ContentType)
         return Info
 
+
 @app.route('/beatmapsets/<int:mapid>', methods=['GET'])
 def LongPathParser(mapid):
     novideo = True if request.args.get('novideo') == '1' else False
     return MapDownloader(mapid, OsuCommunityCookie, novideo)
 
+
 @app.route('/osumap/<int:mapid>', methods=['GET'])
 def OsuHandler(mapid):
     novideo = True if request.args.get('novideo') == '1' else False
     return MapDownloader(mapid, OsuCommunityCookie, novideo)
+
 
 def Analytics(request):
     logger.info('{:=^80}'.format('New request started'))
@@ -174,5 +158,5 @@ def Analytics(request):
 
 if __name__ == '__main__':  # Launcher
     logger.info('New Instance Started.')
-    app.run(host='0.0.0.0', port=8080, debug=False)  # If debug is set to True, every time when the file is saved the program will reload
-
+    # If debug is set to True, every time when the file is saved the program will reload
+    app.run(host='0.0.0.0', port=8080, debug=False)
