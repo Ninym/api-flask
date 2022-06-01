@@ -1,3 +1,4 @@
+from lib2to3.pgen2 import token
 import re
 from flask import Flask, send_from_directory
 from flask import request, redirect, abort, Response
@@ -76,6 +77,34 @@ def parser(query):
     if parameter == 'clear':
         msg = Clear()
         return msg
+
+@app.route('/pusher', methods=['GET'])
+def WechatPusher():
+    title = request.args.get('title')
+    descr = request.args.get('descr')
+    content = request.args.get('content')
+    params = {
+        'title': title,
+        "description": descr,
+        "content": content,
+        'token': os.environ.get('PUSHER_TOKEN')
+    }
+    res = r.post('https://pusher.api.ninym.top/', params=params)
+    return res.text
+
+@app.route('/pusher/', methods=['GET'])
+def PusherSplashAddedHander():
+    title = request.args.get('title')
+    descr = request.args.get('descr')
+    content = request.args.get('content')
+    params = {
+        'title': title,
+        "description": descr,
+        "content": content,
+        'token': os.environ.get('PUSHER_TOKEN')
+    }
+    res = r.post('https://pusher.api.ninym.top/', params=params)
+    return res.text
 
 @app.route('/<query>/', methods=['GET'])
 def SplashAddedHandler(query):
