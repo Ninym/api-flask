@@ -1,7 +1,7 @@
 import logging
 from lib2to3.pgen2 import token
 import re
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, Blueprint
 from flask import request, redirect, abort, Response
 from flask_analytics import Analytics
 import flask
@@ -15,6 +15,7 @@ from utils.ClearCache import Clear
 from utils.Github import ghParser
 from utils.Pixiv import PixivImgDownload
 from utils.Osu import MapDownloader
+from utils.HexoLinkCheck import blueprint as hexo_link_check_blueprint
 
 # Logtail Register
 from logtail import LogtailHandler
@@ -56,6 +57,7 @@ def favicon():  # Return favicon
 
 @app.route('/pixiv/<id>', methods=['GET'])
 def PixivParser(id):
+    '''Pixiv Pictures Downloader'''
     Analytics(request)
     PixivImgDownload(id)
     return flask.send_from_directory('./cache/', f'{id}_{0}.png', as_attachment=False, download_name=f'{id}.png')
@@ -63,6 +65,7 @@ def PixivParser(id):
 
 @app.route('/<query>', methods=['GET'])  # First path handler
 def parser(query):
+    '''Main Function'''
     Analytics(request)
     paths = ['song', 'clear', 'url']  # All requests paths
     path = query.split('/')
@@ -85,17 +88,20 @@ def parser(query):
 
 @app.route('/<query>/', methods=['GET'])
 def SplashAddedHandler(query):
+    '''Main Parser'''
     return parser(query)
 
 
 @app.route('/cache/<file>', methods=['GET'])    # Cache Handler
 def cacheHandler(file):
+    '''Cache Route for downloading files'''
     Analytics(request)
     return flask.send_from_directory('./cache/', file, as_attachment=False, download_name=file)
 
 
 @app.route('/gh/<operation>', methods=['GET'])   # Github Handler
 def ghHandler(operation):
+    '''Github Route'''
     Analytics(request)
     author = request.args.get('author')
     repo = request.args.get('repo')
@@ -107,6 +113,7 @@ def ghHandler(operation):
 
 @app.route('/gh/<op>/', methods=['GET'])
 def SplashAddedghHandler(op):
+    '''Github Route'''
     return ghHandler(op)
 
 
@@ -114,6 +121,7 @@ def SplashAddedghHandler(op):
 def UrlHandler(tokan):
     pass
 
+app.register_blueprint(hexo_link_check_blueprint)
 # @app.errorhandler(404)  # 404 Handler
 # def not_found():
 #     Analytics(request)
