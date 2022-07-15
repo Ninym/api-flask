@@ -9,7 +9,7 @@ blueprint = Blueprint('hexo_link_check', __name__,
                       url_prefix='/hexo_link_check')
 
 
-@blueprint.route('/check', method=['POST'])
+@blueprint.route('/check')
 def check():
     domain = request.args.get('domain')
     path = request.args.get('path')
@@ -17,7 +17,7 @@ def check():
     return get_link(url)
 
 
-@blueprint.route('/report', method=['GET', 'POST'])
+@blueprint.route('/report')
 def report():
     domain = request.args.get('domain')
     filename = domain.replace('http://', '').replace('https://',
