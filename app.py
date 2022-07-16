@@ -167,7 +167,7 @@ def check():
 @app.route('/hexo-link-check/report', methods=['GET', 'POST'])
 def report():
     domain = request.args.get('domain')
-    filename = domain.replace('http://', '').replace('https://',
+    filename = 'hexo-link-check/' + domain.replace('http://', '').replace('https://',
                                                      '').replace('/link', '').replace('/', '')
     try:
         with open(filename, 'r', encoding='utf8') as f:

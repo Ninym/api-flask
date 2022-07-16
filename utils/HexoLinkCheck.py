@@ -4,10 +4,14 @@ from lxml import etree
 import re
 from urllib import parse
 import logging
+import _thread
 
 blueprint = Blueprint('hexo_link_check', __name__,
                       url_prefix='/hexo_link_check')
 
+def StartCheck(url):
+    _thread.start_new_thread(get_link, (url))
+    return {'code': 0, 'msg': 'Start checking. Please check your report at least 2 mins later.'}
 
 def get_link(url, ss=False):
     """
@@ -53,7 +57,7 @@ def get_link(url, ss=False):
     error = ''
     import urllib3
     urllib3.disable_warnings()
-    file.write("检查开始了，你一共有[%s]个友链" % n)
+    file.write("检查开始了，你一共有[%s]个友链\n" % n)
     for i in urls:
         x += 1
         friend_url = i
@@ -61,7 +65,7 @@ def get_link(url, ss=False):
         url2 = url1.split('.')
         url3 = url1 if len(url2) < 3 else url2[1] + "." + url2[2]
         if url3 in friend_url:
-            file.write((friend_url + "：第[{0}]个，自己就不检查了撒").format(str(x)))
+            file.write((friend_url + "：第[{0}]个，自己就不检查了撒\n").format(str(x)))
         else:
             if ss is False:
                 # 自己输入就不用加/link路径了
@@ -75,12 +79,12 @@ def get_link(url, ss=False):
                 ret = requests.get(friend_url, headers=header,
                                    verify=False, timeout=60)
             except requests.exceptions.ConnectionError as e:
-                file.write(f'访问{friend_url}时出现了错误: {e}')
+                file.write(f'访问{friend_url}时出现了错误: {e}\n')
             if not ret.status_code == 200:
                 d += 1
                 error += friend_url + '\n'
                 file.write(("第[{0}]个，[{1}] 链接有误，可能友链不是link，进度：" +
-                            str(round(x / n * 100, 1)) + "%").format(str(x), friend_url))
+                            str(round(x / n * 100, 1)) + "%").format(str(x), friend_url) + '\n')
             else:
                 # soup = etree.HTML(ret.text)
                 # ffriend_url = soup.xpath('//*[@id="article-container"]//@href')
@@ -88,12 +92,12 @@ def get_link(url, ss=False):
                     d1 += 1
                     success += friend_url + '\n'
                     file.write(("第[{0}]个，[{1}] 添加我了，进度：" + str(round(x /
-                                                                     n * 100, 1)) + "%").format(str(x), friend_url))
+                                                                     n * 100, 1)) + "%").format(str(x), friend_url) + '\n')
                 else:
                     d2 += 1
                     none += friend_url + '\n'
                     file.write(("第[{0}]个，[{1}] 没有添加我，进度：" + str(round(x /
-                                                                      n * 100, 1)) + "%").format(str(x), friend_url))
+                                                                      n * 100, 1)) + "%").format(str(x), friend_url) + '\n')
     file.write('统计结果：\n链接有误的有%s个，其中添加了我的有%s个，没有添加我的有%s个\n' % (str(d), str(d1), str(
         d2)) + '添加了我的：\n' + success + '未添加我的：\n' + none + '链接可能存在错误的：\n' + error)
     file.close()
