@@ -155,8 +155,9 @@ def OsuHandler(mapid):
 
 @app.route('/hexo-link-check/check', methods=['GET', 'POST'])
 def check():
-    domain = request.args.get('domain')
-    path = request.args.get('path')
+    data = request.get_json()['content']
+    domain = data['domain']
+    path = data['path']
     if domain == None or path == None:
         return {'code': -1, 'msg': 'Invalid parameters.'}
     url = domain + path
