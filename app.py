@@ -178,8 +178,7 @@ def report():
         data = request.get_json()['content']
         domain = data['domain']
     except:
-        data = request.form.to_dict()
-        domain = data['domain']
+        domain = request.args.get('domain') if request.args.get('domain') != None else request.form.to_dict()['domain']
         if domain == None:
             return {'code': -1, 'msg': 'Invalid parameters.'}
     filename = 'hexo-link-check/' + domain.replace('http://', '').replace('https://',
