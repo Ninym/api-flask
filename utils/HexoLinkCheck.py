@@ -9,27 +9,6 @@ blueprint = Blueprint('hexo_link_check', __name__,
                       url_prefix='/hexo_link_check')
 
 
-@blueprint.route('/check')
-def check():
-    domain = request.args.get('domain')
-    path = request.args.get('path')
-    url = domain + path
-    return get_link(url)
-
-
-@blueprint.route('/report')
-def report():
-    domain = request.args.get('domain')
-    filename = domain.replace('http://', '').replace('https://',
-                                                     '').replace('/link', '').replace('/', '')
-    try:
-        with open(filename, 'r', encoding='utf8') as f:
-            content = f.read()
-        return content
-    except:
-        return f'未找到 {domain} 的检查报告！'
-
-
 def get_link(url, ss=False):
     """
     检查自己的友链状态
@@ -37,9 +16,9 @@ def get_link(url, ss=False):
     :param ss: 是从自己的博客友链获取还是自己添加去查询对方是否添加了自己，默认从自己博客获取
     :return:
     """
-    filename = url.replace('http://', '').replace('https://',
-                                                  '').replace('/link', '').replace('/', '')
-    file = open(filename, 'at+')
+    filename = 'hexo-link-check/' + url.replace('http://', '').replace('https://',
+                                                                      '').replace('/link', '').replace('/', '')
+    file = open(filename, 'at+', encoding='utf8')
     # 发现有些博客有检查user-agent，所以加上这个
     header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                             'Chrome/75.0.3770.142 Safari/537.36'}

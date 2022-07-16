@@ -1,5 +1,4 @@
 import logging
-from lib2to3.pgen2 import token
 import re
 from flask import Flask, send_from_directory, Blueprint
 from flask import request, redirect, abort, Response
@@ -15,7 +14,7 @@ from utils.ClearCache import Clear
 from utils.Github import ghParser
 from utils.Pixiv import PixivImgDownload
 from utils.Osu import MapDownloader
-from utils.HexoLinkCheck import blueprint as hexo_link_check_blueprint
+from utils.HexoLinkCheck import get_link
 
 # Logtail Register
 from logtail import LogtailHandler
@@ -121,7 +120,6 @@ def SplashAddedghHandler(op):
 def UrlHandler(tokan):
     pass
 
-app.register_blueprint(hexo_link_check_blueprint)
 # @app.errorhandler(404)  # 404 Handler
 # def not_found():
 #     Analytics(request)
@@ -155,6 +153,27 @@ def OsuHandler(mapid):
     novideo = True if request.args.get('novideo') == '1' else False
     return MapDownloader(mapid, OsuCommunityCookie, novideo)
 
+@app.route('/hexo-link-check/check', methods=['GET', 'POST'])
+def check():
+    domain = request.args.get('domain')
+    path = request.args.get('path')
+    if domain == None or path == None:
+        return {'code': -1, 'msg': 'Invalid parameters.'}
+    url = domain + path
+    return get_link(url)
+
+
+@app.route('/hexo-link-check/report', methods=['GET', 'POST'])
+def report():
+    domain = request.args.get('domain')
+    filename = domain.replace('http://', '').replace('https://',
+                                                     '').replace('/link', '').replace('/', '')
+    try:
+        with open(filename, 'r', encoding='utf8') as f:
+            content = f.read()
+        return content
+    except:
+        return f'未找到 {domain} 的检查报告！'
 
 def Analytics(request):
     logger.info('{:=^80}'.format('New request started'))
@@ -167,4 +186,4 @@ def Analytics(request):
 if __name__ == '__main__':  # Launcher
     logger.info('New Instance Started.')
     # If debug is set to True, every time when the file is saved the program will reload
-    app.run(host='0.0.0.0', port=8080, debug=False)
+    app.run(host='0.0.0.0', port=8080, debug=True)
