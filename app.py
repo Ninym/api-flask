@@ -21,6 +21,16 @@ from logtail import LogtailHandler
 handler = LogtailHandler(source_token="mquAcDGSyhpjY47S9YxLeEce")
 # Logtail Register Ends
 
+import sentry_sdk
+sentry_sdk.init(
+    dsn="https://9ae227b4584f413cbe2d84c9dd5aff11@o361988.ingest.sentry.io/6577385",
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0
+)
+
 if not os.path.exists('./cache'):   # Cache dictionary for storaging files
     os.system('mkdir ./cache')
 
