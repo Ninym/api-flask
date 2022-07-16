@@ -14,19 +14,12 @@ from utils.ClearCache import Clear
 from utils.Github import ghParser
 from utils.Pixiv import PixivImgDownload
 from utils.Osu import MapDownloader
-from utils.HexoLinkCheck import get_link
+from utils.HexoLinkCheck import StartCheck, get_link
 
 # Logtail Register
 from logtail import LogtailHandler
 handler = LogtailHandler(source_token="mquAcDGSyhpjY47S9YxLeEce")
 # Logtail Register Ends
-
-# Log Collector
-logger = logging.getLogger(__name__)
-logger.handlers = []
-logger.setLevel(logging.INFO)
-logger.addHandler(handler)
-# Log Collector Ends
 
 if not os.path.exists('./cache'):   # Cache dictionary for storaging files
     os.system('mkdir ./cache')
@@ -160,17 +153,25 @@ def check():
         domain = data['domain']
         path = data['path']
     except:
-        domain = request.args.get('domain')
-        path = request.args.get('path')
+        data = request.form.to_dict()
+        domain = data['domain']
+        path = data['path']
         if domain == None or path == None:
             return {'code': -1, 'msg': 'Invalid parameters.'}
     url = domain + path
-    return get_link(url)
+    return StartCheck(url)
 
 
 @app.route('/hexo-link-check/report', methods=['GET', 'POST'])
 def report():
-    domain = request.args.get('domain')
+    try:
+        data = request.get_json()['content']
+        domain = data['domain']
+    except:
+        data = request.form.to_dict()
+        domain = data['domain']
+        if domain == None:
+            return {'code': -1, 'msg': 'Invalid parameters.'}
     filename = 'hexo-link-check/' + domain.replace('http://', '').replace('https://',
                                                      '').replace('/link', '').replace('/', '')
     try:
@@ -180,15 +181,6 @@ def report():
     except:
         return f'未找到 {domain} 的检查报告！'
 
-def Analytics(request):
-    logger.info('{:=^80}'.format('New request started'))
-    logger.info(request.headers)
-    logger.info('{:=^80}'.format('New request ended'))
-    header = request.headers
-    r.get(BaiduAnalytics, headers=header)
-
-
 if __name__ == '__main__':  # Launcher
-    logger.info('New Instance Started.')
     # If debug is set to True, every time when the file is saved the program will reload
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=False)

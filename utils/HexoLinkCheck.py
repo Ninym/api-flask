@@ -10,7 +10,7 @@ blueprint = Blueprint('hexo_link_check', __name__,
                       url_prefix='/hexo_link_check')
 
 def StartCheck(url):
-    _thread.start_new_thread(get_link, (url))
+    _thread.start_new_thread(get_link, (url,))
     return {'code': 0, 'msg': 'Start checking. Please check your report at least 2 mins later.'}
 
 def get_link(url, ss=False):
@@ -20,6 +20,7 @@ def get_link(url, ss=False):
     :param ss: 是从自己的博客友链获取还是自己添加去查询对方是否添加了自己，默认从自己博客获取
     :return:
     """
+    print(f'Start checking {url}')
     filename = 'hexo-link-check/' + url.replace('http://', '').replace('https://',
                                                                       '').replace('/link', '').replace('/', '')
     file = open(filename, 'at+', encoding='utf8')
