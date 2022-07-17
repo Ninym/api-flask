@@ -2,7 +2,6 @@ import logging
 import re
 from flask import Flask, send_from_directory, Blueprint
 from flask import request, redirect, abort, Response
-from flask_analytics import Analytics
 import flask
 import json
 import os
@@ -35,7 +34,6 @@ if not os.path.exists('./cache'):   # Cache dictionary for storaging files
     os.system('mkdir ./cache')
 
 app = Flask(__name__)
-Analytics(app)
 BaiduAnalytics = 'https://hm.baidu.com/hm.js?03bd337fcd1aa8a1b2f78d23aa552ca5'
 # Google Analytics by Flask_Analytics
 app.config['ANALYTICS']['GOOGLE_CLASSIC_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'
