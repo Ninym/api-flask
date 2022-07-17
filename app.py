@@ -35,10 +35,6 @@ if not os.path.exists('./cache'):   # Cache dictionary for storaging files
 
 app = Flask(__name__)
 BaiduAnalytics = 'https://hm.baidu.com/hm.js?03bd337fcd1aa8a1b2f78d23aa552ca5'
-# Google Analytics by Flask_Analytics
-app.config['ANALYTICS']['GOOGLE_CLASSIC_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'
-# Google Universal Analytics by Flask_Analytics
-app.config['ANALYTICS']['GOOGLE_UNIVERSAL_ANALYTICS']['ACCOUNT'] = 'G-ML53SEC0CG'
 Redis_URI = os.environ.get('REDIS_URI')
 OsuCommunityCookie = os.environ.get('OSU_COMMUNITY_COOKIE')
 
