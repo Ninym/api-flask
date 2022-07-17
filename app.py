@@ -41,20 +41,17 @@ OsuCommunityCookie = os.environ.get('OSU_COMMUNITY_COOKIE')
 
 @app.route('/', methods=['GET'])
 def Home():     # No valid path, return to the doc
-    Analytics(request)
     return redirect('https://ninym.top', code=301)
 
 
 @app.route('/favicon.ico')
 def favicon():  # Return favicon
-    Analytics(request)
     return send_from_directory('./assets/', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
 @app.route('/pixiv/<id>', methods=['GET'])
 def PixivParser(id):
     '''Pixiv Pictures Downloader'''
-    Analytics(request)
     PixivImgDownload(id)
     return flask.send_from_directory('./cache/', f'{id}_{0}.png', as_attachment=False, download_name=f'{id}.png')
 
@@ -62,7 +59,6 @@ def PixivParser(id):
 @app.route('/<query>', methods=['GET'])  # First path handler
 def parser(query):
     '''Main Function'''
-    Analytics(request)
     paths = ['song', 'clear', 'url']  # All requests paths
     path = query.split('/')
     parameter = path[0]
@@ -91,14 +87,12 @@ def SplashAddedHandler(query):
 @app.route('/cache/<file>', methods=['GET'])    # Cache Handler
 def cacheHandler(file):
     '''Cache Route for downloading files'''
-    Analytics(request)
     return flask.send_from_directory('./cache/', file, as_attachment=False, download_name=file)
 
 
 @app.route('/gh/<operation>', methods=['GET'])   # Github Handler
 def ghHandler(operation):
     '''Github Route'''
-    Analytics(request)
     author = request.args.get('author')
     repo = request.args.get('repo')
     ContentType = request.args.get('type')
@@ -116,10 +110,6 @@ def SplashAddedghHandler(op):
 @app.route('/url/<token>', methods=['GET', 'POST'])
 def UrlHandler(tokan):
     pass
-
-# @app.errorhandler(404)  # 404 Handler
-# def not_found():
-#     Analytics(request)
 
 
 def NeteaseHandler(id, ContentType):
